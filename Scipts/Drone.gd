@@ -1,0 +1,2 @@
+class_name Drone
+extends CharacterBody2D

@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://bu1hdr15hsngl"]
+[gd_scene load_steps=3 format=3 uid="uid://bu1hdr15hsngl"]
 
 [ext_resource type="Script" path="res://Scipts/World.gd" id="1_3ymjc"]
+[ext_resource type="PackedScene" uid="uid://b3tspfqd203da" path="res://Scenes/Drone.tscn" id="2_4xe3g"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_3ymjc")
+drone_scene = ExtResource("2_4xe3g")
 
 [node name="DronesStart" type="Marker2D" parent="."]
 unique_name_in_owner = true
