@@ -12,9 +12,5 @@ drone_scene = ExtResource("2_4xe3g")
 unique_name_in_owner = true
 position = Vector2(241, 316)
 
-[node name="FieldBoundaries" type="StaticBody2D" parent="."]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FieldBoundaries"]
-
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("3_ojc4r")

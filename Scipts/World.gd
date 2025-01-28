@@ -7,12 +7,24 @@ extends Node2D
 @export var drones_count = 15
 @export var drone_scene : PackedScene
 @export var drone_spawn_check_increment := 20.0
+@export var field_size_factor := 1.0
 
 @onready var camera: Camera = $Camera2D
 
+var field_size : Vector2
+
 func _ready():
-	camera.global_position = $DronesStart.global_position
-	$FieldBoundaries/CollisionPolygon2D.polygon = generate_field_boundaries()
+	var field := StaticBody2D.new()
+	var field_collision := CollisionPolygon2D.new()
+	field_collision.polygon = generate_field_boundaries()
+	field.collision_layer = 2
+	field.add_child(field_collision)
+	field.add_to_group("Environment")
+	
+	get_tree().current_scene.add_child(field)
+	
+	camera.global_position = %DronesStart.global_position
+	
 	spawn_drones(%DronesStart.position)
 
 
@@ -66,20 +78,20 @@ func can_spawn(pos : Vector2, drone_radius := 15.0) -> bool:
 	return hits.size() == 0
 	
 func generate_field_boundaries() -> PackedVector2Array:
-	var screen_size = DisplayServer.window_get_size()
+	field_size = DisplayServer.window_get_size() * field_size_factor
 	var result : PackedVector2Array
 	result.append(Vector2(0, 0))
-	result.append(Vector2(0, screen_size.y))
-	result.append(Vector2(screen_size.x, screen_size.y))
-	result.append(Vector2(screen_size.x, 0))
-	result.append(Vector2(-10, 0))
-	result.append(Vector2(screen_size.x, -10))
-	result.append(Vector2(screen_size.x + 10, screen_size.y))
-	result.append(Vector2(-10, screen_size.y + 10))
+	result.append(Vector2(0, field_size.y))
+	result.append(Vector2(field_size.x, field_size.y))
+	result.append(Vector2(field_size.x, 0))
+	result.append(Vector2(-100, 0))
+	result.append(Vector2(field_size.x, -100))
+	result.append(Vector2(field_size.x + 100, field_size.y))
+	result.append(Vector2(-100, field_size.y + 100))
 	return result
 
 func _draw() -> void:
 	var field_rect : Rect2
 	field_rect.position = Vector2(0, 0)
-	field_rect.end = DisplayServer.window_get_size()
-	draw_rect(field_rect, Color.AQUA)
+	field_rect.end = Vector2(field_size.x, field_size.y)
+	draw_rect(field_rect, Color.BLACK)
