@@ -8,12 +8,13 @@ extends Node2D
 @export var drone_scene : PackedScene
 @export var drone_spawn_check_increment := 20.0
 
+@onready var camera: Camera = $Camera2D
 
 func _ready():
-	#var drone = drone_scene.instantiate() as Drone
-	#add_child(drone)
-	#drone.position = %DronesStart.position
+	camera.global_position = $DronesStart.global_position
+	$FieldBoundaries/CollisionPolygon2D.polygon = generate_field_boundaries()
 	spawn_drones(%DronesStart.position)
+
 
 func generate_spiral_points(origin: Vector2, points_count: int, increment: int) -> Array:
 	var result = []
@@ -60,6 +61,25 @@ func can_spawn(pos : Vector2, drone_radius := 15.0) -> bool:
 	var circle_shape := CircleShape2D.new()
 	circle_shape.radius = drone_radius
 	params.shape = circle_shape
-	params.transform = Transform2D(0, position)
+	params.transform = Transform2D(0, pos)
 	var hits : Array = get_world_2d().direct_space_state.intersect_shape(params)
 	return hits.size() == 0
+	
+func generate_field_boundaries() -> PackedVector2Array:
+	var screen_size = DisplayServer.window_get_size()
+	var result : PackedVector2Array
+	result.append(Vector2(0, 0))
+	result.append(Vector2(0, screen_size.y))
+	result.append(Vector2(screen_size.x, screen_size.y))
+	result.append(Vector2(screen_size.x, 0))
+	result.append(Vector2(-10, 0))
+	result.append(Vector2(screen_size.x, -10))
+	result.append(Vector2(screen_size.x + 10, screen_size.y))
+	result.append(Vector2(-10, screen_size.y + 10))
+	return result
+
+func _draw() -> void:
+	var field_rect : Rect2
+	field_rect.position = Vector2(0, 0)
+	field_rect.end = DisplayServer.window_get_size()
+	draw_rect(field_rect, Color.AQUA)

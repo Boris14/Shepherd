@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bu1hdr15hsngl"]
+[gd_scene load_steps=4 format=3 uid="uid://bu1hdr15hsngl"]
 
 [ext_resource type="Script" path="res://Scipts/World.gd" id="1_3ymjc"]
 [ext_resource type="PackedScene" uid="uid://b3tspfqd203da" path="res://Scenes/Drone.tscn" id="2_4xe3g"]
+[ext_resource type="Script" path="res://Scipts/Camera.gd" id="3_ojc4r"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_3ymjc")
@@ -10,3 +11,10 @@ drone_scene = ExtResource("2_4xe3g")
 [node name="DronesStart" type="Marker2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(241, 316)
+
+[node name="FieldBoundaries" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FieldBoundaries"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("3_ojc4r")

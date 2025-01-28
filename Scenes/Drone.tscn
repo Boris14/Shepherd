@@ -4,10 +4,12 @@
 [ext_resource type="Script" path="res://Scipts/Drone.gd" id="1_170as"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1egwp"]
-radius = 55.0
+radius = 85.3302
 
 [node name="Drone" type="CharacterBody2D"]
 scale = Vector2(0.4, 0.4)
+motion_mode = 1
+slide_on_ceiling = false
 script = ExtResource("1_170as")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
