@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://b3tspfqd203da"]
+[gd_scene load_steps=5 format=3 uid="uid://b3tspfqd203da"]
 
 [ext_resource type="Script" path="res://Scipts/Drone.gd" id="1_170as"]
 [ext_resource type="Texture2D" uid="uid://rpk73hqkadh5" path="res://Assets/ship_H.png" id="2_r2bc7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1egwp"]
 radius = 30.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ltuii"]
+radius = 302.593
 
 [node name="Drone" type="CharacterBody2D"]
 scale = Vector2(0.4, 0.4)
@@ -20,19 +23,12 @@ texture = ExtResource("2_r2bc7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1egwp")
+debug_color = Color(1, 1, 1, 0.42)
 
 [node name="VisionArea" type="Area2D" parent="."]
 collision_layer = 3
 collision_mask = 3
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="VisionArea"]
-polygon = PackedVector2Array(0, 0, 135, -135, 135, 135)
-
-[node name="ObstacleCheckRay_Forward" type="RayCast2D" parent="."]
-target_position = Vector2(135, 0)
-
-[node name="ObstacleCheckRay_Left" type="RayCast2D" parent="."]
-target_position = Vector2(135, 0)
-
-[node name="ObstacleCheckRay_Right" type="RayCast2D" parent="."]
-target_position = Vector2(135, 0)
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="VisionArea"]
+shape = SubResource("CircleShape2D_ltuii")
+debug_color = Color(0.945098, 0, 0.270588, 0.172549)

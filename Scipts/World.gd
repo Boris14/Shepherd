@@ -8,15 +8,13 @@ extends Node2D
 @export var drone_scene : PackedScene
 @export var drone_spawn_check_increment := 20.0
 @export var field_size_factor := 1.0
+@export var simulation_time_scale := 1.0
 
 @onready var camera: Camera = $Camera2D
 
 var field_size : Vector2
 
 func _ready():
-
-	print(rad_to_deg(Vector2.RIGHT.angle_to(Vector2.UP)))
-	
 	var field := StaticBody2D.new()
 	var field_collision := CollisionPolygon2D.new()
 	field_collision.polygon = generate_field_boundaries()
@@ -29,7 +27,11 @@ func _ready():
 	camera.global_position = %DronesStart.global_position
 	
 	spawn_drones(%DronesStart.position)
+	
+	Engine.time_scale = simulation_time_scale
 
+func _exit_tree():
+	Engine.time_scale = 1.0
 
 func generate_spiral_points(origin: Vector2, points_count: int, increment: int) -> Array:
 	var result = []
