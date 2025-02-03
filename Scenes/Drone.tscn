@@ -12,6 +12,7 @@ collision_mask = 2
 motion_mode = 1
 slide_on_ceiling = false
 script = ExtResource("1_170as")
+obstacle_collision_mask = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708
@@ -26,3 +27,12 @@ collision_mask = 3
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="VisionArea"]
 polygon = PackedVector2Array(0, 0, 135, -135, 135, 135)
+
+[node name="ObstacleCheckRay_Forward" type="RayCast2D" parent="."]
+target_position = Vector2(135, 0)
+
+[node name="ObstacleCheckRay_Left" type="RayCast2D" parent="."]
+target_position = Vector2(135, 0)
+
+[node name="ObstacleCheckRay_Right" type="RayCast2D" parent="."]
+target_position = Vector2(135, 0)

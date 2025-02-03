@@ -14,6 +14,9 @@ extends Node2D
 var field_size : Vector2
 
 func _ready():
+
+	print(rad_to_deg(Vector2.RIGHT.angle_to(Vector2.UP)))
+	
 	var field := StaticBody2D.new()
 	var field_collision := CollisionPolygon2D.new()
 	field_collision.polygon = generate_field_boundaries()
