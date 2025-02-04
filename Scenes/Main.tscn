@@ -1,12 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://bu1hdr15hsngl"]
+[gd_scene load_steps=5 format=3 uid="uid://bu1hdr15hsngl"]
 
-[ext_resource type="Script" path="res://Scipts/World.gd" id="1_3ymjc"]
+[ext_resource type="Script" path="res://Scripts/World.gd" id="1_3ymjc"]
 [ext_resource type="PackedScene" uid="uid://b3tspfqd203da" path="res://Scenes/Drone.tscn" id="2_4xe3g"]
-[ext_resource type="Script" path="res://Scipts/Camera.gd" id="3_ojc4r"]
+[ext_resource type="PackedScene" uid="uid://02tifmdln2m7" path="res://Scenes/PointOfInterest.tscn" id="3_4qetj"]
+[ext_resource type="Script" path="res://Scripts/Camera.gd" id="3_ojc4r"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_3ymjc")
+field_size_factor = 2.0
+simulation_time_scale = 2.0
+points_of_interest_count = 20
 drone_scene = ExtResource("2_4xe3g")
+point_of_interest_scene = ExtResource("3_4qetj")
 
 [node name="DronesStart" type="Marker2D" parent="."]
 unique_name_in_owner = true

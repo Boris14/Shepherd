@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3tspfqd203da"]
 
-[ext_resource type="Script" path="res://Scipts/Drone.gd" id="1_170as"]
+[ext_resource type="Script" path="res://Scripts/Drone.gd" id="1_170as"]
 [ext_resource type="Texture2D" uid="uid://rpk73hqkadh5" path="res://Assets/ship_H.png" id="2_r2bc7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1egwp"]
@@ -9,13 +9,14 @@ radius = 30.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_ltuii"]
 radius = 302.593
 
-[node name="Drone" type="CharacterBody2D"]
+[node name="Drone" type="CharacterBody2D" groups=["Drone"]]
 scale = Vector2(0.4, 0.4)
 collision_mask = 2
 motion_mode = 1
 slide_on_ceiling = false
 script = ExtResource("1_170as")
 obstacle_collision_mask = 2
+wander_circle_radius = 22.8
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708

@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://02tifmdln2m7"]
+
+[ext_resource type="Script" path="res://Scripts/PointOfInterest.gd" id="1_71wqu"]
+[ext_resource type="Texture2D" uid="uid://bhuhhkwpb2m8p" path="res://Assets/meteor_detailedSmall.png" id="1_nds37"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_83rvr"]
+radius = 20.0
+
+[node name="PointOfInterest" type="Area2D"]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_71wqu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.733689, 0.580284, 0.0775616, 1)
+texture = ExtResource("1_nds37")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_83rvr")
