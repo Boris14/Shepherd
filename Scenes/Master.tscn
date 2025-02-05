@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bk7lvy4s63mw6"]
+
+[ext_resource type="Script" path="res://Scripts/Master.gd" id="1_wwm7g"]
+[ext_resource type="PackedScene" uid="uid://bu1hdr15hsngl" path="res://Scenes/Simulation.tscn" id="2_vtepp"]
+
+[node name="Master" type="Node2D"]
+rotation = -0.00209901
+script = ExtResource("1_wwm7g")
+simulation_scene = ExtResource("2_vtepp")

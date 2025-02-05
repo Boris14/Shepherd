@@ -1,0 +1,24 @@
+[gd_scene load_steps=7 format=3 uid="uid://bu1hdr15hsngl"]
+
+[ext_resource type="Script" path="res://Scripts/Simulation.gd" id="1_irrvx"]
+[ext_resource type="PackedScene" uid="uid://b3tspfqd203da" path="res://Scenes/Drone.tscn" id="2_4r0ku"]
+[ext_resource type="PackedScene" uid="uid://02tifmdln2m7" path="res://Scenes/PointOfInterest.tscn" id="3_hjpdt"]
+[ext_resource type="PackedScene" uid="uid://dg1m8rk2t50ms" path="res://Scenes/Obstacle.tscn" id="4_en85r"]
+[ext_resource type="Script" path="res://Scripts/Camera.gd" id="4_wl5k3"]
+[ext_resource type="PackedScene" uid="uid://c4n72dj73e75f" path="res://Scenes/Enemy.tscn" id="5_dhvmu"]
+
+[node name="Simulation" type="Node2D"]
+script = ExtResource("1_irrvx")
+field_size_factor = 2.0
+simulation_time_scale = 10.0
+drone_scene = ExtResource("2_4r0ku")
+point_of_interest_scene = ExtResource("3_hjpdt")
+obstacle_scene = ExtResource("4_en85r")
+enemy_scene = ExtResource("5_dhvmu")
+
+[node name="DronesStart" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(241, 316)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("4_wl5k3")

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://c4n72dj73e75f"]
+
+[ext_resource type="Script" path="res://Scripts/Enemy.gd" id="1_lgqew"]
+[ext_resource type="Texture2D" uid="uid://cepmtq3ae4hxh" path="res://Assets/ship_sidesB.png" id="1_mvvhx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_clkik"]
+radius = 27.074
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3mgg6"]
+radius = 142.425
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_lgqew")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.88442, 0, 0.20379, 1)
+rotation = 1.5708
+texture = ExtResource("1_mvvhx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_clkik")
+
+[node name="VisionArea" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea"]
+shape = SubResource("CircleShape2D_3mgg6")
+debug_color = Color(0.963815, 0, 0.496478, 0.42)

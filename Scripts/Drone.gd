@@ -1,6 +1,8 @@
 class_name Drone
 extends CharacterBody2D
 
+signal destroyed()
+
 @export_range(0, 100) var min_speed := 20.0 
 @export_range(100, 500) var max_speed := 300.0
 @export_range(0, 180) var vision_angle := 120
@@ -15,7 +17,7 @@ extends CharacterBody2D
 @export_group("Environment Reaction")
 @export_range(0, 5.0, 0.1) var obstacle_avoidance_weight := 10.0
 @export_range(0, 100.0, 0.5) var poi_attraction_weight := 50.0
-@export_range(0, 5.0, 0.1) var enemy_repulsion_weight := 10.0
+@export_range(2, 20.0, 0.2) var enemy_repulsion_weight := 10.0
 
 @export_group("Wander Behavior")
 ## Distance in front of the drone
@@ -34,6 +36,7 @@ var wander_angle = randf_range(0, TAU)  # Random initial direction
 var seen_drones : Array[Drone]
 var seen_obstacles : Array[CollisionObject2D]
 var seen_points_of_interest : Array[PointOfInterest]
+var seen_enemies : Array[Enemy]
 
 var acceleration : Vector2
 
@@ -58,7 +61,9 @@ func _physics_process(delta: float) -> void:
 	
 	acceleration += avoid_obstacles() * obstacle_avoidance_weight
 	
-	if seen_points_of_interest.size() > 0:
+	if seen_enemies.size() > 0:
+		acceleration += enemy_repulsion() * enemy_repulsion_weight
+	elif seen_points_of_interest.size() > 0:
 		acceleration += poi_attraction() * poi_attraction_weight
 	else:
 		acceleration += wander() * wander_weight
@@ -102,7 +107,8 @@ func alignment() -> Vector2:
 
 func avoid_obstacles():
 	var space_state = get_world_2d().direct_space_state
-	var query = PhysicsRayQueryParameters2D.create(global_position, global_position + velocity, obstacle_collision_mask, [self])
+	var query = PhysicsRayQueryParameters2D.create(global_position,\
+		global_position + velocity, obstacle_collision_mask, [self])
 	var turn_angle := 0.0
 	var turn_direction := 1
 	var increase_angle := true
@@ -130,6 +136,20 @@ func poi_attraction() -> Vector2:
 			closest_point = point
 			closest_distance = distance
 	return closest_point.global_position - global_position
+
+func enemy_repulsion() -> Vector2:
+	if seen_enemies.is_empty():
+		return Vector2.ZERO
+	
+	var closest_enemy = seen_enemies.front()
+	var closest_distance := global_position.distance_to(closest_enemy.global_position)
+	for enemy in seen_enemies:
+		var distance = global_position.distance_to(enemy.global_position)
+		if distance < closest_distance:
+			closest_enemy = enemy
+			closest_distance = distance
+	return global_position - closest_enemy.global_position
+	
 
 func wander() -> Vector2:
 	var circle_center = velocity.normalized() * wander_circle_distance
@@ -164,16 +184,21 @@ func _body_entered_vision(body : Node2D):
 		
 	if body is Drone:
 		seen_drones.append(body)
+	elif body is Enemy:
+		seen_enemies.append(body)
 
 func _body_exited_vision(body : Node2D):
 	if body is Drone:
 		seen_drones.erase(body)
-	elif body is PointOfInterest:
-		body.collected.disconnect(_on_point_of_interest_collected)
-		seen_points_of_interest.erase(body)
+	elif body is Enemy:
+		seen_enemies.erase(body)
 		
 func _on_point_of_interest_collected(point_of_interest : PointOfInterest):
 	seen_points_of_interest.erase(point_of_interest)
+		
+func destroy():
+	destroyed.emit()
+	queue_free()
 		
 func _draw():
 	#draw_circle(velocity.normalized() * wander_circle_distance, wander_circle_radius, Color.GREEN)

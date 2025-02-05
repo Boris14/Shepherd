@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dg1m8rk2t50ms"]
+
+[ext_resource type="Texture2D" uid="uid://cts2lijgpjac" path="res://Assets/meteor_detailedLarge.png" id="1_elesf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_70bg3"]
+radius = 23.0217
+
+[node name="Obstacle" type="StaticBody2D" groups=["Environment"]]
+collision_layer = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_elesf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["Environment"]]
+shape = SubResource("CircleShape2D_70bg3")
