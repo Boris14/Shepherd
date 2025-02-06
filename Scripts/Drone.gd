@@ -9,16 +9,6 @@ signal destroyed()
 @export_flags_2d_physics var obstacle_collision_mask = 1
 @export_range(1, 45, 1) var obstacle_check_delta := 10.0
 
-@export_group("Flocking Behavior")
-@export_range(50000, 500000, 100) var separation_weight := 100000.0
-@export_range(2, 10.0, 0.05) var cohesion_weight := 5.0
-@export_range(0.1, 2.0, 0.05) var alignment_weight := 0.5
-
-@export_group("Environment Reaction")
-@export_range(0, 5.0, 0.1) var obstacle_avoidance_weight := 10.0
-@export_range(0, 100.0, 0.5) var poi_attraction_weight := 50.0
-@export_range(2, 20.0, 0.2) var enemy_repulsion_weight := 10.0
-
 @export_group("Wander Behavior")
 ## Distance in front of the drone
 @export_range(10, 100.0, 0.5) var wander_circle_distance = 50.0
@@ -26,12 +16,15 @@ signal destroyed()
 @export_range(5, 40.0, 0.2) var wander_circle_radius = 20.0
 ## How fast the angle changes
 @export_range(0.05, 0.8, 0.01) var wander_change = 0.3
-## How much does the wander affect the drone's movement
-@export_range(0.5, 5.0, 0.1) var wander_weight = 3.0
-
 var wander_angle = randf_range(0, TAU)  # Random initial direction
 
-@onready var vision_area = $VisionArea
+var separation_weight := 100000.0
+var cohesion_weight := 5.0
+var alignment_weight := 0.5
+var obstacle_avoidance_weight := 10.0
+var poi_attraction_weight := 50.0
+var enemy_repulsion_weight := 10.0
+var wander_weight = 3.0
 
 var seen_drones : Array[Drone]
 var seen_obstacles : Array[CollisionObject2D]
@@ -39,6 +32,8 @@ var seen_points_of_interest : Array[PointOfInterest]
 var seen_enemies : Array[Enemy]
 
 var acceleration : Vector2
+
+@onready var vision_area = $VisionArea
 
 func get_forward_vector() -> Vector2:
 	return Vector2.RIGHT.rotated(rotation)

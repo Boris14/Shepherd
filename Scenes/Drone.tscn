@@ -16,7 +16,6 @@ motion_mode = 1
 slide_on_ceiling = false
 script = ExtResource("1_170as")
 obstacle_collision_mask = 2
-wander_circle_radius = 22.8
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 1.5708

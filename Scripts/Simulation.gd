@@ -22,12 +22,24 @@ signal finished(simulation : Simulation, poi_collected : int, elapsed_time : flo
 @export var obstacle_scene : PackedScene
 @export var enemy_scene : PackedScene
 
+@export_group("Flocking Behavior")
+@export_range(50000, 500000, 100) var separation_weight := 100000.0
+@export_range(2, 10.0, 0.05) var cohesion_weight := 5.0
+@export_range(0.1, 2.0, 0.05) var alignment_weight := 0.5
+@export_range(0.5, 5.0, 0.1) var wander_weight = 3.0
+
+@export_group("Environment Reaction")
+@export_range(0, 5.0, 0.1) var obstacle_avoidance_weight := 10.0
+@export_range(0, 100.0, 0.5) var poi_attraction_weight := 50.0
+@export_range(2, 20.0, 0.2) var enemy_repulsion_weight := 10.0
+
+
 @onready var camera: Camera = $Camera2D
 
 var field_size : Vector2
 var collected_points_of_interest := 0
-var alive_drones := 0
 var elapsed_time := 0.0
+var alive_drones := 0
 
 func _ready():
 	var field := StaticBody2D.new()
@@ -37,9 +49,9 @@ func _ready():
 	field.add_child(field_collision)
 	field.add_to_group("Environment")
 	
-	get_tree().current_scene.add_child(field)
+	add_child(field)
 	
-	camera.global_position = %DronesStart.global_position
+	camera.position = Vector2(field_size.x / 2.0, field_size.y / 2.0)
 	
 	spawn_drones(%DronesStart.position)
 	spawn_points_of_interest()
@@ -52,13 +64,8 @@ func _ready():
 	add_child(enemy_spawn_timer)
 	enemy_spawn_timer.start()
 	
-	Engine.time_scale = simulation_time_scale
-
 func _process(delta):
 	elapsed_time += delta
-
-func _exit_tree():
-	Engine.time_scale = 1.0
 
 func spawn_drones(pos : Vector2):
 	var points = Utils.generate_spiral_points(pos, 1000, drone_spawn_check_increment)
@@ -68,8 +75,15 @@ func spawn_drones(pos : Vector2):
 			point_i < points.size(): 
 			point_i += 1
 		var drone := drone_scene.instantiate() as Drone
+		drone.separation_weight = separation_weight
+		drone.cohesion_weight = cohesion_weight
+		drone.alignment_weight = alignment_weight
+		drone.wander_weight = wander_weight
+		drone.obstacle_avoidance_weight = obstacle_avoidance_weight
+		drone.poi_attraction_weight = poi_attraction_weight
+		drone.enemy_repulsion_weight = enemy_repulsion_weight
 		drone.destroyed.connect(_on_drone_destroyed)
-		drone.global_position = points[point_i]
+		drone.position = points[point_i]
 		add_child(drone)
 		alive_drones += 1
 	
@@ -92,7 +106,7 @@ func spawn_points_of_interest():
 				spawn_padding, field_size.y - spawn_padding)
 			find_position_attempts -= 1
 		
-		point_of_interest.global_position = spawn_position
+		point_of_interest.position = spawn_position
 		add_child(point_of_interest)
 	
 func spawn_obstacles():
@@ -116,7 +130,7 @@ func spawn_obstacles():
 				spawn_padding, field_size.y - spawn_padding)
 			find_position_attempts -= 1
 				
-		obstacle.global_position = spawn_position
+		obstacle.position = spawn_position
 		add_child(obstacle)
 	
 func _on_enemy_spawn_timeout():
@@ -139,7 +153,7 @@ func _on_enemy_spawn_timeout():
 		enemy.queue_free()
 		return
 		
-	enemy.global_position = spawn_position
+	enemy.position = spawn_position
 	add_child(enemy)
 	
 	
@@ -168,5 +182,5 @@ func _on_point_of_interest_collected(point_of_interest : PointOfInterest):
 func _on_drone_destroyed():
 	alive_drones -= 1
 	if alive_drones <= 0:
-		finished.emit(self, collected_points_of_interest, elapsed_time)
+		finished.emit(self)
 		queue_free()
