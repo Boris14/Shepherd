@@ -8,7 +8,17 @@ signal finished(simulation : Simulation, is_forced : bool)
 @export var points_of_interest_count := 10
 @export var obstacles_count := 5
 @export var obstacle_scale_range := Vector2(0.3, 1.3)
+@export var enemy_scale_range := Vector2(0.5, 1.3)
 @export var spawn_padding := 50
+
+@export_category("Genetic Algorithm")
+@export var separation_weight_range := Vector2(50000, 500000)
+@export var cohesion_weight_range := Vector2(2, 10)
+@export var alignment_weight_range := Vector2(0, 2)
+@export var wander_weight_range := Vector2(0, 5)
+@export var obstacle_avoidance_weight_range := Vector2(0, 5)
+@export var poi_attraction_weight_range := Vector2(0, 100)
+@export var enemy_repulsion_weight_range := Vector2(2, 20)
 
 @export_category("Drones")
 @export var drones_count = 10
@@ -41,6 +51,18 @@ var alive_drones := 0
 func force_stop_simulation():
 	finished.emit(self, true)
 	queue_free()
+
+func set_weights(weights : Array[float]):
+	if weights.size() != 7:
+		print("Incorrect number of weights")
+		return
+	separation_weight = weights[0]
+	cohesion_weight = weights[1]
+	alignment_weight = weights[2]
+	wander_weight = weights[3]
+	obstacle_avoidance_weight = weights[4]
+	poi_attraction_weight = weights[5]
+	enemy_repulsion_weight = weights[6]
 
 func _ready():
 	var field := StaticBody2D.new()
@@ -76,13 +98,13 @@ func spawn_drones(pos : Vector2):
 			point_i < points.size(): 
 			point_i += 1
 		var drone := drone_scene.instantiate() as Drone
-		drone.separation_weight = separation_weight
-		drone.cohesion_weight = cohesion_weight
-		drone.alignment_weight = alignment_weight
-		drone.wander_weight = wander_weight
-		drone.obstacle_avoidance_weight = obstacle_avoidance_weight
-		drone.poi_attraction_weight = poi_attraction_weight
-		drone.enemy_repulsion_weight = enemy_repulsion_weight
+		drone.separation_weight = remap(separation_weight, 0, 1, separation_weight_range.x, separation_weight_range.y)
+		drone.cohesion_weight = remap(cohesion_weight, 0, 1, cohesion_weight_range.x, cohesion_weight_range.y)
+		drone.alignment_weight = remap(alignment_weight, 0, 1, alignment_weight_range.x, alignment_weight_range.y)
+		drone.wander_weight = remap(wander_weight, 0, 1, wander_weight_range.x, wander_weight_range.y)
+		drone.obstacle_avoidance_weight = remap(obstacle_avoidance_weight, 0, 1, obstacle_avoidance_weight_range.x, obstacle_avoidance_weight_range.y)
+		drone.poi_attraction_weight = remap(poi_attraction_weight, 0, 1, poi_attraction_weight_range.x, poi_attraction_weight_range.y)
+		drone.enemy_repulsion_weight = remap(enemy_repulsion_weight, 0, 1, enemy_repulsion_weight_range.x, enemy_repulsion_weight_range.y)
 		drone.destroyed.connect(_on_drone_destroyed)
 		drone.position = points[point_i]
 		add_child(drone)
@@ -136,6 +158,8 @@ func spawn_obstacles():
 	
 func _on_enemy_spawn_timeout():
 	var enemy := enemy_scene.instantiate() as Enemy
+	enemy.scale.x *= randf_range(enemy_scale_range.x, enemy_scale_range.y)
+	enemy.scale.y = enemy.scale.x
 	var enemy_radius := 0.0
 	for child in enemy.get_children():
 		if child is CollisionShape2D:

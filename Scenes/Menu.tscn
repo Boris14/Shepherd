@@ -1,10 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://j8qhwmjvmvar"]
+[gd_scene load_steps=7 format=3 uid="uid://j8qhwmjvmvar"]
 
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="1_at055"]
 [ext_resource type="PackedScene" uid="uid://bu1hdr15hsngl" path="res://Scenes/Simulation.tscn" id="2_epdxq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_cpwr2"]
 font_size = 70
+
+[sub_resource type="LabelSettings" id="LabelSettings_cryns"]
+font_size = 20
+font_color = Color(0, 0.859992, 0.449693, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_17lym"]
+font_size = 20
+font_color = Color(0.92172, 0.926737, 1.54018e-06, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_dwjeh"]
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -15,7 +25,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_at055")
 simulation_scene = ExtResource("2_epdxq")
-train_simulations_count = 50
+train_simulations_count = 10
+generations_count = 5
 
 [node name="TrainButton" type="Button" parent="."]
 layout_mode = 1
@@ -47,7 +58,7 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Run a Simulation"
 
-[node name="Label" type="Label" parent="."]
+[node name="Title" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -59,3 +70,72 @@ offset_bottom = 109.0
 grow_horizontal = 2
 text = "Shepherd"
 label_settings = SubResource("LabelSettings_cpwr2")
+
+[node name="GeneticBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -20.0
+offset_right = 190.0
+offset_bottom = 30.0
+grow_vertical = 2
+
+[node name="GeneticAlgorithmTitle" type="Label" parent="GeneticBoxContainer"]
+layout_mode = 2
+text = "Genetic Algorithm:
+"
+label_settings = SubResource("LabelSettings_cryns")
+
+[node name="GeneticParameters" type="Label" parent="GeneticBoxContainer"]
+layout_mode = 2
+text = "Fesaf
+sefsef
+efsef
+"
+horizontal_alignment = 3
+
+[node name="WeightsBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -155.0
+offset_top = -38.0
+offset_right = -40.0
+offset_bottom = 38.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="WeightsTitle" type="Label" parent="WeightsBoxContainer"]
+layout_mode = 2
+text = "Behavior Weights:"
+label_settings = SubResource("LabelSettings_17lym")
+
+[node name="Weights" type="Label" parent="WeightsBoxContainer"]
+layout_mode = 2
+text = "separation: 0.4
+cohesion: 3.5"
+horizontal_alignment = 3
+
+[node name="RichTextLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -70.0
+offset_right = 175.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Drone Navigation System optimized
+using a Genetic Algorithm, in a 
+hostile environment."
+label_settings = SubResource("LabelSettings_dwjeh")
+horizontal_alignment = 1
