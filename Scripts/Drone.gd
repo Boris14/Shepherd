@@ -7,7 +7,7 @@ signal destroyed()
 @export_range(50, 400) var max_speed := 80.0
 @export_range(0, 180) var vision_angle := 120
 @export_flags_2d_physics var obstacle_collision_mask = 1
-@export_range(1, 45, 1) var obstacle_check_delta := 10.0
+@export_range(1, 45, 1) var obstacle_check_delta := 5.0
 
 @export_group("Wander Behavior")
 ## Distance in front of the drone
@@ -106,9 +106,13 @@ func avoid_obstacles():
 	var turn_direction := 1
 	var increase_angle := true
 	var result = space_state.intersect_ray(query)
-	while not result.is_empty() and abs(turn_angle) < vision_angle:
+	while not result.is_empty():
+		if abs(turn_angle) < vision_angle:
+			turn_angle = PI / 2
+			break
+			
 		if increase_angle:
-			turn_angle += obstacle_check_delta
+			turn_angle += deg_to_rad(obstacle_check_delta)
 			increase_angle = false
 		else:
 			turn_direction *= -1
