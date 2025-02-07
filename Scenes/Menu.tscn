@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://j8qhwmjvmvar"]
+[gd_scene load_steps=4 format=3 uid="uid://j8qhwmjvmvar"]
 
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="1_at055"]
 [ext_resource type="PackedScene" uid="uid://bu1hdr15hsngl" path="res://Scenes/Simulation.tscn" id="2_epdxq"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cpwr2"]
+font_size = 70
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -12,8 +15,24 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_at055")
 simulation_scene = ExtResource("2_epdxq")
+train_simulations_count = 50
 
-[node name="StartButton" type="Button" parent="."]
+[node name="TrainButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -164.0
+offset_right = 100.0
+offset_bottom = -114.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Train"
+
+[node name="SimulationButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -26,4 +45,17 @@ offset_right = 100.0
 offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Run Simulations"
+text = "Run a Simulation"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 86.0
+offset_right = 20.0
+offset_bottom = 109.0
+grow_horizontal = 2
+text = "Shepherd"
+label_settings = SubResource("LabelSettings_cpwr2")

@@ -9,8 +9,6 @@
 
 [node name="Simulation" type="Node2D"]
 script = ExtResource("1_irrvx")
-field_size_factor = 2.0
-simulation_time_scale = 10.0
 drone_scene = ExtResource("2_4r0ku")
 point_of_interest_scene = ExtResource("3_hjpdt")
 obstacle_scene = ExtResource("4_en85r")

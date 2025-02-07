@@ -10,7 +10,7 @@ radius = 30.0
 radius = 302.593
 
 [node name="Drone" type="CharacterBody2D" groups=["Drone"]]
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.25, 0.25)
 collision_mask = 2
 motion_mode = 1
 slide_on_ceiling = false
@@ -26,8 +26,8 @@ shape = SubResource("CircleShape2D_1egwp")
 debug_color = Color(1, 1, 1, 0.42)
 
 [node name="VisionArea" type="Area2D" parent="."]
-collision_layer = 3
-collision_mask = 3
+collision_layer = 15
+collision_mask = 15
 
 [node name="CollisionPolygon2D" type="CollisionShape2D" parent="VisionArea"]
 shape = SubResource("CircleShape2D_ltuii")

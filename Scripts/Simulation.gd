@@ -1,26 +1,18 @@
 class_name Simulation
 extends Node2D
 
-signal finished(simulation : Simulation, poi_collected : int, elapsed_time : float)
+signal finished(simulation : Simulation, is_forced : bool)
 
 @export var enemy_spawn_rate = 3.0
 @export var field_size_factor := 1.0
-@export var simulation_time_scale := 1.0
 @export var points_of_interest_count := 10
 @export var obstacles_count := 5
-@export var obstacle_scale_range := Vector2(1.0, 3.0)
-@export var spawn_padding := 30
+@export var obstacle_scale_range := Vector2(0.3, 1.3)
+@export var spawn_padding := 50
 
 @export_category("Drones")
-@export var drone_sight_radius = 300.0
-@export var drones_count = 15
+@export var drones_count = 10
 @export var drone_spawn_check_increment := 20.0
-
-@export_category("Packed Scenes")
-@export var drone_scene : PackedScene
-@export var point_of_interest_scene : PackedScene
-@export var obstacle_scene : PackedScene
-@export var enemy_scene : PackedScene
 
 @export_group("Flocking Behavior")
 @export_range(50000, 500000, 100) var separation_weight := 100000.0
@@ -33,13 +25,22 @@ signal finished(simulation : Simulation, poi_collected : int, elapsed_time : flo
 @export_range(0, 100.0, 0.5) var poi_attraction_weight := 50.0
 @export_range(2, 20.0, 0.2) var enemy_repulsion_weight := 10.0
 
+@export_category("Packed Scenes")
+@export var drone_scene : PackedScene
+@export var point_of_interest_scene : PackedScene
+@export var obstacle_scene : PackedScene
+@export var enemy_scene : PackedScene
 
 @onready var camera: Camera = $Camera2D
 
 var field_size : Vector2
-var collected_points_of_interest := 0
+var collected_points_of_interest : Array[PointOfInterest]
 var elapsed_time := 0.0
 var alive_drones := 0
+
+func force_stop_simulation():
+	finished.emit(self, true)
+	queue_free()
 
 func _ready():
 	var field := StaticBody2D.new()
@@ -177,10 +178,10 @@ func _draw() -> void:
 	draw_rect(field_rect, Color.BLACK)
 
 func _on_point_of_interest_collected(point_of_interest : PointOfInterest):
-	collected_points_of_interest += 1
+	Utils.add_unique(collected_points_of_interest, point_of_interest)
 
 func _on_drone_destroyed():
 	alive_drones -= 1
 	if alive_drones <= 0:
-		finished.emit(self)
+		finished.emit(self, false)
 		queue_free()

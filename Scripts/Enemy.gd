@@ -1,7 +1,7 @@
 class_name Enemy
 extends CharacterBody2D
 
-@export var speed := 100
+@export var speed := 80
 
 var seen_drones : Array[Drone]
 var target_drone : Drone

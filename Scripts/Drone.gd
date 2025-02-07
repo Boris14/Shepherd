@@ -3,8 +3,8 @@ extends CharacterBody2D
 
 signal destroyed()
 
-@export_range(0, 100) var min_speed := 20.0 
-@export_range(100, 500) var max_speed := 300.0
+@export_range(0, 50) var min_speed := 20.0 
+@export_range(50, 400) var max_speed := 80.0
 @export_range(0, 180) var vision_angle := 120
 @export_flags_2d_physics var obstacle_collision_mask = 1
 @export_range(1, 45, 1) var obstacle_check_delta := 10.0
@@ -39,8 +39,6 @@ func get_forward_vector() -> Vector2:
 	return Vector2.RIGHT.rotated(rotation)
 
 func _ready() -> void:
-	vision_area.area_entered.connect(_on_area_entered_vision)
-	vision_area.area_exited.connect(_on_area_exited_vision)
 	vision_area.body_entered.connect(_body_entered_vision)
 	vision_area.body_exited.connect(_body_exited_vision)
 	velocity.angle()
@@ -108,7 +106,7 @@ func avoid_obstacles():
 	var turn_direction := 1
 	var increase_angle := true
 	var result = space_state.intersect_ray(query)
-	while not result.is_empty():
+	while not result.is_empty() and abs(turn_angle) < vision_angle:
 		if increase_angle:
 			turn_angle += obstacle_check_delta
 			increase_angle = false
@@ -155,19 +153,6 @@ func wander() -> Vector2:
 	var wander_force = circle_center + displacement
 	return wander_force.normalized() * max_speed
 
-func _on_area_entered_vision(area : Area2D):		
-	var area_angle = get_forward_vector().angle_to(area.global_position - global_position)
-	if area_angle > vision_angle:
-		return
-	
-	if area is PointOfInterest:
-		area.collected.connect(_on_point_of_interest_collected)
-		seen_points_of_interest.append(area)
-	
-func _on_area_exited_vision(area : Area2D):
-	if area is PointOfInterest:
-		area.collected.disconnect(_on_point_of_interest_collected)
-		seen_points_of_interest.erase(area)
 	
 func _body_entered_vision(body : Node2D):
 	if body == self:
@@ -181,12 +166,18 @@ func _body_entered_vision(body : Node2D):
 		seen_drones.append(body)
 	elif body is Enemy:
 		seen_enemies.append(body)
+	elif body is PointOfInterest:
+		body.collected.connect(_on_point_of_interest_collected)
+		seen_points_of_interest.append(body)
 
 func _body_exited_vision(body : Node2D):
 	if body is Drone:
 		seen_drones.erase(body)
 	elif body is Enemy:
 		seen_enemies.erase(body)
+	elif body is PointOfInterest:
+		body.collected.disconnect(_on_point_of_interest_collected)
+		seen_points_of_interest.erase(body)
 		
 func _on_point_of_interest_collected(point_of_interest : PointOfInterest):
 	seen_points_of_interest.erase(point_of_interest)

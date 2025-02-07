@@ -1,6 +1,7 @@
 class_name Camera
 extends Camera2D
 
+@export var control_enabled := false
 @export var drag_sensitivity := 3.0
 @export var zoom_sensitivity := 0.03
 @export var max_zoom := 1.5
@@ -20,6 +21,8 @@ func _physics_process(delta: float) -> void:
 		global_position = lerp(global_position, target_position, 0.2)
 		
 func _unhandled_input(event: InputEvent) -> void:
+	if not control_enabled:
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:  # Mouse button down
