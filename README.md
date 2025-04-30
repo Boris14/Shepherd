@@ -1,2 +1,2 @@
 # Shepherd
- система за навигация на рояк, използваща еволюционен алгоритъм
+Swarm navigation system using an evolutionary algorithm 
